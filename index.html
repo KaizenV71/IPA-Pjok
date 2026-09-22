@@ -170,7 +170,6 @@ const P = [
 
 let data = [], i = 0, sc = 0, done = false, sub = '';
 
-// Mengakses Elemen DOM secara Aman
 const elHome = document.getElementById('sec-home');
 const elQuiz = document.getElementById('sec-quiz');
 const elResult = document.getElementById('sec-result');
@@ -186,9 +185,28 @@ const elFinal = document.getElementById('final');
 const elFt = document.getElementById('ft');
 const elAdvice = document.getElementById('advice');
 
+// Fungsi Otomatis Mengacak Jawaban A, B, C, D
+function shuffleAnswers(dataset) {
+  return dataset.map(item => {
+    let options = [...item[1]];
+    let correctText = options[item[2]]; // Mengambil teks jawaban yang benar
+    
+    // Acak urutan pilihan jawaban
+    for (let j = options.length - 1; j > 0; j--) {
+      const k = Math.floor(Math.random() * (j + 1));
+      [options[j], options[k]] = [options[k], options[j]];
+    }
+    
+    // Cari indeks baru untuk jawaban yang benar
+    let newCorrectIndex = options.indexOf(correctText);
+    return [item[0], options, newCorrectIndex, item[3]];
+  });
+}
+
 function start(x) {
   sub = x;
-  data = (x === 'ipa') ? I : P;
+  let rawData = (x === 'ipa') ? I : P;
+  data = shuffleAnswers(rawData); // Jawaban diacak secara otomatis setiap kali kuis dimulai
   i = 0;
   sc = 0;
   elHome.classList.add('hidden');
